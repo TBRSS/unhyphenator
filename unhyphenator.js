@@ -2,17 +2,22 @@ var Unhyphenator = (function () {
     "use strict";
 
     var shy = /(?:\u00AD|\&#173;|\&shy;)/g;
+    var zws = /(?:\u200B|\&#8203;)/g;
 
     var shyFilter = function (text) {
         return text.replace(shy, '');
     };
 
-    function Unhyphenator(filter) {
-        filter = filter || shyFilter;
+    var zwsFilter = function (text) { 
+        return text.replace(zws, '');
+    };
+
+    function Unhyphenator(filters) {
+        if (!filters) filters = [shyFilter, zswFilter];
         var self = this;
         this.shy = shy;
         this.boundHandler = function (ev) {
-            self.handler(ev, filter);
+            self.handler(ev, filters);
         };
     }
 
@@ -37,7 +42,8 @@ var Unhyphenator = (function () {
     };
 
     // Build the handler.
-    Unhyphenator.prototype.handler = function (e, filter) {
+    Unhyphenator.prototype.handler = function (e, filters) {
+        var i;
         var target = e.target || e.srcElement,
             document = target.ownerDocument,
             body = document.body,
@@ -59,7 +65,8 @@ var Unhyphenator = (function () {
             sel = window.getSelection();
             range = sel.getRangeAt(0);
             shadow.appendChild(range.cloneContents());
-            shadow.innerHTML = filter(shadow.innerHTML);
+            for (i = 0; i<filters.length; i++)
+                shadow.innerHTML = filters[i](shadow.innerHTML);
             sel.selectAllChildren(shadow);
             window.setTimeout(function () {
                 shadow.parentNode.removeChild(shadow);
@@ -69,7 +76,8 @@ var Unhyphenator = (function () {
         } else {                // IE
             sel = document.selection;
             range = sel.createRange();
-            shadow.innerHTML = filter(range.htmlText);
+            for (i = 0; i<filters.length; i++)
+                shadow.innerHTML = filters[i](range.htmlText);
             var range2 = body.createTextRange();
             range2.moveToElementText(shadow);
             range2.select();

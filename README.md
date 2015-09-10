@@ -6,8 +6,7 @@ Unhyphenator can be used with server-side hyphenation, or any
 client-side JavaScript hyphenation library (such as [Hypher][]).
 
 Unhyphenator is based on the equivalent functionality from
-[Hyphenator.js][hyphenator], which in turn derives from
-[Sweet Justice][justice].
+[Hyphenator.js][], which in turn derives from [Sweet Justice][].
 
 ## Usage
 
@@ -20,14 +19,14 @@ For unhyphenation only:
     u.stop()  // To deactivate the handler
 
 If you want to do something else, instantiate the new unhyphenator
-with a callback of one argument:
+with an array of callbacks of one argument:
 
     // Convert all copy-pasted text to uppercase.
-    var u = new Hyphenator(function (s) { return s.toUpperCase(); })
+    var u = new Hyphenator([function (s) { return s.toUpperCase(); }])
     u.start()
 
-At the moment there is no provision for multiple unhyphenators.
+Each function in the array will be applied in order.
 
-[hyphenator]: https://code.google.com/p/hyphenator/
-[justice]: https://github.com/aristus/sweet-justice
 [Hypher]: https://github.com/bramstein/hypher
+[Hyphenator.js]: https://code.google.com/p/hyphenator/
+[Sweet Justice]: https://github.com/aristus/sweet-justice

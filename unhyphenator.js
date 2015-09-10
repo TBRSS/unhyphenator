@@ -13,7 +13,7 @@ var Unhyphenator = (function () {
     };
 
     function Unhyphenator(filters) {
-        if (!filters) filters = [shyFilter, zswFilter];
+        if (!filters) filters = [shyFilter, zwsFilter];
         var self = this;
         this.shy = shy;
         this.boundHandler = function (ev) {
